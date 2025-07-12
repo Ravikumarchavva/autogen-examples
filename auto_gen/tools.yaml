@@ -1,0 +1,76 @@
+sources:
+  my-pg-source:
+    kind: postgres
+    host: 127.0.0.1
+    port: 5432
+    database: postgres
+    user: postgres
+    password: postgres
+
+tools:
+  list-customers:
+    kind: postgres-sql
+    source: my-pg-source
+    description: List all customers in the bankl schema.
+    parameters: []
+    statement: SELECT * FROM bankl.customers;
+
+  get-customer-accounts:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Get all accounts for a specific customer.
+    parameters:
+      - name: customer_id
+        type: integer
+        description: Customer ID to fetch accounts for.
+    statement: SELECT * FROM bankl.accounts WHERE customer_id = $1;
+
+  top-customer-balances-by-branch:
+    kind: postgres-sql
+    source: my-pg-source
+    description: |
+      For each branch, list the top 3 customers ranked by their total account balance,
+      including customer name, branch name, and rank.
+    parameters: []
+    statement: >
+      WITH CustomerTotalBalances AS (
+        SELECT 
+          a.customer_id,
+          b.name AS branch_name,
+          SUM(a.balance) AS total_balance
+        FROM 
+          bankl.accounts a
+        JOIN bankl.customers c ON a.customer_id = c.customer_id
+        JOIN bankl.branches b ON a.branch_id = b.branch_id
+        GROUP BY a.customer_id, b.name
+      ),
+      RankedCustomers AS (
+        SELECT 
+          customer_id,
+          branch_name,
+          total_balance,
+          ROW_NUMBER() OVER (PARTITION BY branch_name ORDER BY total_balance DESC) AS rank
+        FROM CustomerTotalBalances
+      )
+      SELECT 
+        c.full_name AS customer_name,
+        r.branch_name,
+        r.total_balance,
+        r.rank
+      FROM RankedCustomers r
+      JOIN bankl.customers c ON r.customer_id = c.customer_id
+      WHERE r.rank <= 3;
+
+  list-branches:
+    kind: postgres-sql
+    source: my-pg-source
+    description: List all bank branches.
+    parameters: []
+    statement: SELECT * FROM bankl.branches;
+
+toolsets:
+  bankl-toolset:
+    - list-customers
+    - get-customer-accounts
+    - top-customer-balances-by-branch
+    - list-branches
