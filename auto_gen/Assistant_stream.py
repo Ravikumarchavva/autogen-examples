@@ -1,7 +1,7 @@
 from autogen_agentchat.agents import AssistantAgent
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_core.models._model_client import ModelFamily, ModelInfo
-from autogen_agentchat.messages import TextMessage, ModelClientStreamingChunkEvent
+from autogen_agentchat.messages import ModelClientStreamingChunkEvent
 
 import os
 from dotenv import load_dotenv
@@ -37,10 +37,9 @@ agent = AssistantAgent(
 async def main():
     print("Starting the Gemini-powered assistant agent...")
     stream = agent.run_stream(task="Explain back propagation in neural networks.")
-    from IPython.display import display, Markdown
     async for message in stream:
         if isinstance(message, ModelClientStreamingChunkEvent):
-            print("\033[1mAssistant's response:\033[0m", display(Markdown(message.content)))
+            print("\033[1mAssistant's response:\033[0m", message.content))
         else:
             continue
 

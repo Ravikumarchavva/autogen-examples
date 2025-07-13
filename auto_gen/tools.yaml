@@ -13,7 +13,7 @@ tools:
     source: my-pg-source
     description: List all customers in the bankl schema.
     parameters: []
-    statement: SELECT * FROM bankl.customers;
+    statement: SELECT * FROM bankl.customers limit 5000; 
 
   get-customer-accounts:
     kind: postgres-sql
@@ -23,7 +23,7 @@ tools:
       - name: customer_id
         type: integer
         description: Customer ID to fetch accounts for.
-    statement: SELECT * FROM bankl.accounts WHERE customer_id = $1;
+    statement: SELECT * FROM bankl.accounts WHERE customer_id = $1 limit 5000;
 
   top-customer-balances-by-branch:
     kind: postgres-sql
@@ -59,14 +59,14 @@ tools:
         r.rank
       FROM RankedCustomers r
       JOIN bankl.customers c ON r.customer_id = c.customer_id
-      WHERE r.rank <= 3;
+      WHERE r.rank <= 3 limit 5000;
 
   list-branches:
     kind: postgres-sql
     source: my-pg-source
     description: List all bank branches.
     parameters: []
-    statement: SELECT * FROM bankl.branches;
+    statement: SELECT * FROM bankl.branches limit 5000;
 
 toolsets:
   bankl-toolset:
