@@ -9,6 +9,7 @@ dependencies = [
     "autogen-core>=0.6,<0.7",
     "autogen-ext>=0.6.4",
     "dotenv>=0.9.9",
+    "ipykernel>=6.29.5",
     "mcp>=1.11.0",
     "openai>=1.95.1",
     "psycopg2-binary>=2.9.10",
