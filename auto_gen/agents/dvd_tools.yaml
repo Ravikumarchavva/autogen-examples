@@ -1,0 +1,93 @@
+sources:
+  my-pg-source:
+    kind: postgres
+    host: 127.0.0.1
+    port: 5432
+    database: dvd
+    user: postgres
+    password: ravi
+
+tools:
+  top-rented-movies:
+  kind: postgres-sql
+  source: my-pg-source
+  description: List the top 10 most rented movies along with the number of times they were rented.
+  parameters: []
+  statement: >
+    SELECT f.title, COUNT(*) AS rental_count
+    FROM dvd.rental r
+    JOIN dvd.inventory i ON r.inventory_id = i.inventory_id
+    JOIN dvd.film f ON i.film_id = f.film_id
+    GROUP BY f.title
+    ORDER BY rental_count DESC
+    LIMIT 10;
+
+  customer-payment-summary:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Get total amount paid by a customer.
+    parameters:
+      - name: customer_id
+        type: integer
+        description: Customer ID
+    statement: >
+      SELECT c.first_name || ' ' || c.last_name AS customer_name,
+             SUM(p.amount) AS total_paid
+      FROM dvd.payment p
+      JOIN dvd.customer c ON p.customer_id = c.customer_id
+      WHERE c.customer_id = $1
+      GROUP BY customer_name;
+
+  top-customers-by-payment:
+    kind: postgres-sql
+    source: my-pg-source
+    description: List top 5 customers by total payments made.
+    parameters: []
+    statement: >
+      SELECT c.first_name || ' ' || c.last_name AS customer_name,
+             SUM(p.amount) AS total_paid
+      FROM dvd.payment p
+      JOIN dvd.customer c ON p.customer_id = c.customer_id
+      GROUP BY customer_name
+      ORDER BY total_paid DESC
+      LIMIT 5;
+
+  list-store-inventory:
+    kind: postgres-sql
+    source: my-pg-source
+    description: List all films available in a specific store.
+    parameters:
+      - name: store_id
+        type: integer
+        description: Store ID
+    statement: >
+      SELECT f.title, COUNT(*) AS copies_available
+      FROM dvd.inventory i
+      JOIN dvd.film f ON i.film_id = f.film_id
+      WHERE i.store_id = $1
+      GROUP BY f.title
+      ORDER BY f.title;
+
+  rental-history-by-customer:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Show rental history of a customer.
+    parameters:
+      - name: customer_id
+        type: integer
+        description: Customer ID
+    statement: >
+      SELECT f.title, r.rental_date, r.return_date
+      FROM dvd.rental r
+      JOIN dvd.inventory i ON r.inventory_id = i.inventory_id
+      JOIN dvd.film f ON i.film_id = f.film_id
+      WHERE r.customer_id = $1
+      ORDER BY r.rental_date DESC;
+
+toolsets:
+  dvd-tools:
+    - top-rented-movies
+    - customer-payment-summary
+    - top-customers-by-payment
+    - list-store-inventory
+    - rental-history-by-customer
