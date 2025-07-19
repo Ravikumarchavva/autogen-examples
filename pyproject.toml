@@ -3,18 +3,18 @@ name = "autogen-examples"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
+    "asyncio-atexit>=1.0.1",
     "autogen>=0.9.6",
     "autogen-agentchat>=0.6.4",
-    "autogen-core>=0.6,<0.7",
+    "autogen-core>=0.6.4",
     "autogen-ext[docker]>=0.6.4",
+    "docker>=7.1.0",
     "dotenv>=0.9.9",
     "ipykernel>=6.29.5",
     "mcp>=1.11.0",
     "openai>=1.95.1",
-    "psycopg2-binary>=2.9.10",
-    "pyautogen>=0.10.0",
     "pydotenv>=0.0.7",
     "sqlalchemy>=2.0.41",
     "tiktoken>=0.9.0",
