@@ -1,0 +1,39 @@
+{
+  "header": {
+    "invoice_no": "INV-2023-09-08-001",
+    "customer_no": "CUST-456789",
+    "invoice_period": "2023-09-01 to 2023-09-08",
+    "date": "2023-09-08",
+    "customer_name": "Sample Customer Ltd.",
+    "customer_address": "123 Sample Street, Sample City, Country",
+    "vat_no": "123456789",
+    "contact_person_name": "John Doe",
+    "contact_person_phone": "+1234567890"
+  },
+  "line_items": [
+    {
+      "service_description": "Web Hosting September 2023",
+      "amount_without_vat": 100.0,
+      "quantity": 1,
+      "total_amount": 100.0
+    },
+    {
+      "service_description": "Domain Registration",
+      "amount_without_vat": 15.0,
+      "quantity": 2,
+      "total_amount": 30.0
+    },
+    {
+      "service_description": "SSL Certificate",
+      "amount_without_vat": 50.0,
+      "quantity": 1,
+      "total_amount": 50.0
+    }
+  ],
+  "total_without_vat": 180.0,
+  "vat_amount": 36.0,
+  "gross_amount_incl_vat": 216.0,
+  "terms_of_payment": "Payment due within 30 days",
+  "bank_iban": "DE89 3704 0044 0532 0130 00",
+  "bank_bic": "COBADEFFXXX"
+}
