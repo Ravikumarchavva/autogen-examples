@@ -18,5 +18,6 @@ dependencies = [
     "pydotenv>=0.0.7",
     "rich>=14.0.0",
     "sqlalchemy>=2.0.41",
+    "streamlit>=1.47.1",
     "tiktoken>=0.9.0",
 ]
