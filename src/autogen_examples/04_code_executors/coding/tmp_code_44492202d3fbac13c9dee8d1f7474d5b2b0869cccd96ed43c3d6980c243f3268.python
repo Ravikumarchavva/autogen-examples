@@ -1,0 +1,38 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import yfinance as yf
+
+# Define the stock tickers for NVIDIA and Tesla
+nvidia_ticker = 'NVDA'
+tesla_ticker = 'TSLA'
+
+# Set the start and end date
+start_date = '2024-01-01'
+end_date = pd.Timestamp.today().strftime('%Y-%m-%d')
+
+# Download the stock data using yfinance with auto_adjust=True
+nvidia_data = yf.download(nvidia_ticker, start=start_date, end=end_date, auto_adjust=True)
+tesla_data = yf.download(tesla_ticker, start=start_date, end=end_date, auto_adjust=True)
+
+# Calculate the daily returns
+nvidia_data['Return'] = nvidia_data['Close'].pct_change()
+tesla_data['Return'] = tesla_data['Close'].pct_change()
+
+# Cumulative returns
+nvidia_data['Cumulative Return'] = (1 + nvidia_data['Return']).cumprod()
+tesla_data['Cumulative Return'] = (1 + tesla_data['Return']).cumprod()
+
+# Plot the cumulative returns
+plt.figure(figsize=(10, 6))
+plt.plot(nvidia_data.index, nvidia_data['Cumulative Return'], label='NVIDIA (NVDA)')
+plt.plot(tesla_data.index, tesla_data['Cumulative Return'], label='Tesla (TSLA)')
+plt.title('NVIDIA vs Tesla Cumulative Stock Returns YTD from 2024-01-01')
+plt.xlabel('Date')
+plt.ylabel('Cumulative Return')
+plt.legend()
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+
+# Save the plot to a file
+plt.savefig('nvidia_vs_tesla_ytd_2024.png')
